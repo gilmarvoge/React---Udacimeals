@@ -56,9 +56,8 @@ class App extends Component {
   }
 
   render() {
-    const { calendar, remove } = this.props
-    const { foodModalOpen, loadingFood, food } = this.state
     const { calendar, remove, selectRecipe } = this.props
+    const { foodModalOpen, loadingFood, food } = this.state
     const mealOrder = ['breakfast', 'lunch', 'dinner']
     return (
       <div className='container'>
