@@ -1,6 +1,10 @@
-import { ADD_RECIPE, REMOVE_FROM_CALENDAR } from '../actions'
+
 import { combineReducers } from 'redux'
 
+import {
+    ADD_RECIPE,
+    REMOVE_FROM_CALENDAR,
+} from '../actions'
 
 
 //reduce food que ira receber um estado. O estado inicial estará configurado para um objeto vazio.
@@ -12,7 +16,7 @@ function food(state = {}, action) { // incluido uma ação
 
             return {
                 ...state,  //esta receita específica será esta receita 
-                [recipe.label]: recipe
+                [recipe.label]: recipe,
             }
         default:   //default vai retornar o estado se nenhum dos outros cases responder.
             return state
@@ -23,39 +27,39 @@ function food(state = {}, action) { // incluido uma ação
 //objeto
 const initialCalendarState = {
     sunday: {
-        breaksfest: null,
+        breakfast: null,
         lunch: null,
-        dinner: null
+        dinner: null,
     },
     monday: {
-        breaksfest: null,
+        breakfast: null,
         lunch: null,
-        dinner: null
+        dinner: null,
     },
     tuesday: {
-        breaksfest: null,
+        breakfast: null,
         lunch: null,
-        dinner: null
+        dinner: null,
     },
     wednesday: {
-        breaksfest: null,
+        breakfast: null,
         lunch: null,
-        dinner: null
+        dinner: null,
     },
     thursday: {
-        breaksfest: null,
+        breakfast: null,
         lunch: null,
-        dinner: null
+        dinner: null,
     },
     friday: {
-        breaksfest: null,
+        breakfast: null,
         lunch: null,
-        dinner: null
+        dinner: null,
     },
     saturday: {
-        breaksfest: null,
+        breakfast: null,
         lunch: null,
-        dinner: null
+        dinner: null,
     },
 }
 
@@ -65,18 +69,24 @@ const initialCalendarState = {
 //não modifica o estado diretamente;
 function calendar(state = initialCalendarState, action) {
     const { day, recipe, meal } = action
+
     switch (action.type) {
         case ADD_RECIPE://sempre que add_recipe for enviada, o estado vai mudar para isso, baseada nessa action
             return { //usar o mesmo estado de antes usando object spread syntax
                 ...state, //estado no dia especifico vai continuar o mesmo 
                 [day]: {
                     ...state[day],
-                    [meal]: recipe.label    //a "meal" agora sera "recipe.label", que é o nome da receita específica 
+                    [meal]: recipe.label,  //a "meal" agora sera "recipe.label", que é o nome da receita específica 
                 }
             }
         case REMOVE_FROM_CALENDAR: // o estado vai permanecer o mesmo, com exceção desde dia específico.
             return { // e todas as outras "meals" neste dia permanecerão as mesmas, com exceção de que 
-            }       // a "meal" específica agora será "null"
+                ...state,            // a "meal" específica agora será "null"
+                [day]: {
+                    ...state[day],
+                    [meal]: null,
+                }
+            }
         default:
             return state
     }

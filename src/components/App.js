@@ -8,6 +8,7 @@ import ArrowRightIcon from 'react-icons/lib/fa/arrow-circle-right'
 import Loading from 'react-loading'
 import { fetchRecipes } from '../utils/api'
 import FoodList from './FoodList'
+import ShoopingList from './ShoppingList'
 
 class App extends Component {
   state = {
@@ -16,7 +17,8 @@ class App extends Component {
     day: null,
     food: null,
     loadingFood: false,
-  } 
+    ingredientsModalOpen: false,
+  }
   /*
     doThing = () => {
       this.props.dispatch(addRecipe({}))      //action creator addRecipe, passar qualquer propriedade específica para ela
@@ -31,36 +33,60 @@ class App extends Component {
       day,
     }))
   }
-
   closeFoodModal = () => {
     this.setState(() => ({
       foodModalOpen: false,
       meal: null,
       day: null,
-      food: null
+      food: null,
     }))
   }
-
   searchFood = (e) => {
     if (!this.input.value) {
       return
     }
+
     e.preventDefault()
+
     this.setState(() => ({ loadingFood: true }))
 
     fetchRecipes(this.input.value)  //quando chamar "fetchRecipes", vai receber uma array de comida de volta
       .then((food) => this.setState(() => ({
         food,
-        loadingFood: false
+        loadingFood: false,
       })))
+  }
+
+  openIngredientsModal = () => this.setState(() => ({ ingredientsModalOpen: true }))
+  closeingredientsModal = () => this.setState(() => ({ ingredientsModalOpen: false }))
+  generateShoopingList = () => { // array com todos os diferentes ingredientes
+    return this.props.calendar.reduce((result, { meals }) => {//pegar todas as refeições e fazer um push
+      const { breakfast, lunch, dinner } = meals          // de todas as refeições para uma única array
+      breakfast && result.push(breakfast)
+      lunch && result.push(lunch)
+      dinner && result.push(dinner)
+
+      return result
+    }, []) //serve para nivelar a array
+      // refeições
+      .reduce((ings, { ingredientLines }) => ings.concat(ingredientLines), [])
   }
 
   render() {
     const { calendar, remove, selectRecipe } = this.props
-    const { foodModalOpen, loadingFood, food } = this.state
+    const { foodModalOpen, loadingFood, food, ingredientsModalOpen } = this.state
     const mealOrder = ['breakfast', 'lunch', 'dinner']
     return (
       <div className='container'>
+
+        <div className='nav'>
+          <h1 className='header'>UdaciMeals</h1>
+          <button
+            className='shopping-list'
+            onClick={this.openIngredientsModal}>
+            Shooping List
+          </button>
+        </div>
 
         <ul className='meal-types'>
           {mealOrder.map((mealType) => (     // un ordered list, faz 3 listas, 3 colunas
@@ -84,7 +110,7 @@ class App extends Component {
                         <img src={meals[meal].image} alt={meals[meal].label} />
                         <button onClick={() => remove({ meal, day })}>Clear</button>
                       </div>
-                      : <button onClick={this.openFoodModal({ meal, day })} className='icon-btn'>
+                      : <button onClick={() => this.openFoodModal({ meal, day })} className='icon-btn'>
                         <CalendarIcon size={30} />
                       </button>}
                   </li>
@@ -133,6 +159,16 @@ class App extends Component {
           </div>
         </Modal>
 
+        <Modal
+          className='modal'
+          overlayClassName='overlay'
+          isOpen={ingredientsModalOpen}
+          onRequestClose={this.closeingredientsModal}
+          contentLabel='Modal'//se ingredientsModalOpen estiver aberto
+        //a ShoppingList pode ser renderizada
+        >
+          {ingredientsModalOpen && <ShoopingList list={this.generateShoopingList()} />}
+        </Modal>
       </div>
     )
   }
@@ -162,6 +198,7 @@ function mapStateToProps({ calendar, food }) {
         meals[meal] = calendar[day][meal]
           ? food[calendar[day][meal]]
           : null
+
         return meals
       }, {})
       //em resumo, quando logar "Props", vamos ver o novo formato do nosso "calendar", depois de mapearmos os dias

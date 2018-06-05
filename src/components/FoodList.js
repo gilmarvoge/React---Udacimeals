@@ -1,12 +1,12 @@
 import React from 'react'
 
-function trim (str) {
+function trim(str) {
   return str.length > 16
     ? str.slice(0, 16) + '...'
     : str
 }
 
-export default function FoodList ({ food, onSelect }) {
+export default function FoodList({ food, onSelect }) {
   if (food.length === 0) {
     return <p>Your search has 0 results.</p>
   }
