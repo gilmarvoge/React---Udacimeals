@@ -1,10 +1,10 @@
 ### UdaciMeals
 
-O app  disponibiliza um calendário customizável para que usuários controlem seus cafés da manhã, almoços e jantas durante a semana. Os usuários aproveitarão a API Edamam de busca de receitas para adicionar as refeições, e assim gerar uma lista de compras baseada na refeição escolhida.
+The app provides a customizable calendar for users to control their breakfasts, lunches and dinners during the week. Users will take advantage of the Edamam recipe search API to add meals, thus generating a shopping list based on the chosen meal.
 
-* cd udacimeals -- acesse a pasta
-* npm install -- instalar pacotes
-* npm start -- iniciar o aplicativo
+* cd udacimeals - access the folder
+* npm install - install packages
+* npm start - start the application
 
 ![](udacimeals.png)
 
